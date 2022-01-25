@@ -1,6 +1,12 @@
 'use strict';
+const corsOptions = {
+   origin:'*',
+   credentials: true,
+   optionSuccessStatus:200,
+}
 
 const express = require('express');
+const cors = require("cors");
 const snoowrap = require('snoowrap');
 const config = require('../config.js');
 const app = express();
@@ -9,8 +15,10 @@ const port = 3000;
 
 const staticFilePath = path.join(__dirname, '..', '/client/dist')
 
+app.use(cors(corsOptions))
 app.use(express.static(staticFilePath));
 app.use(express.json());
+
 
 
 const reddit = new snoowrap({
