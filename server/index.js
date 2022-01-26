@@ -5,10 +5,11 @@ const corsOptions = {
    optionSuccessStatus:200,
 }
 
+const config = require('../config.js');
 const express = require('express');
 const cors = require("cors");
 const snoowrap = require('snoowrap');
-const config = require('../config.js');
+const alpha = require('alphavantage')({ key: config.alphavantage });
 const app = express();
 const path = require('path');
 const port = 3000;
@@ -45,6 +46,12 @@ app.get('/reddit/ticker', (req, res) => {
   .catch((err) => {
     res.send(err)
   })
+})
+
+app.get('/graph', (req, res) => {
+  alpha.data.intraday(`msft`).then((data) => {
+    res.send(data)
+  });
 })
 
 app.listen(port, () => {

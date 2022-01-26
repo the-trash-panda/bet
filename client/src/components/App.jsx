@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Reddit from './Reddit.jsx';
-import BarChart from './BarChart.jsx';
+import Candle from './Candle.jsx';
 import axios from 'axios';
-import 'regenerator-runtime/runtime'
+import 'regenerator-runtime/runtime';
 
 const App = () => {
 
@@ -11,6 +11,8 @@ const App = () => {
   const [search, setSearch] = useState(false)
   const [tickerInfo, setTickerInfo] = useState({})
   const [chartData, setChartData] = useState({})
+  const [options, setOptions] = useState({})
+  const [series, setSeries] = useState([])
 
   useEffect(() => {
     setDidMount(true);
@@ -31,46 +33,6 @@ const App = () => {
         console.log(err)
       })
   }
-
-  useEffect(() => {
-    const fetchPrices = async () => {
-      setChartData({
-        type: 'bar',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      })
-    }
-    fetchPrices()
-  }, [])
 
   if (!didMount) {
     return null;
@@ -98,9 +60,10 @@ const App = () => {
           tickerSymbol={tickerSymbol}
           tickerInfo={tickerInfo}
         />
-        <BarChart
-          chartData={chartData}
+        <div className="chart">
+        <Candle
         />
+        </div>
       </div>
     </div>
   )

@@ -36,3 +36,6 @@ bower_components/
 
 # Configs
 config.js
+
+# Folders
+dataset
