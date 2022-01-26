@@ -24,7 +24,7 @@ const App = () => {
     const getChartData = axios.get('/candle', { params: { ticker: tickerSymbol}})
       .then((res) => {setChartData(res.data)})
     const getNewsData = axios.get('/news', {params: { ticker: tickerSymbol }})
-      .then((res) => {console.log(res); setNewsData(res.data.articles)})
+      .then((res) => {setNewsData(res.data.articles)})
 
     const promises = [getRedditData, getChartData, getNewsData];
 
