@@ -8,11 +8,8 @@ const App = () => {
 
   const [didMount, setDidMount] = useState(false)
   const [tickerSymbol, setTickerSymbol] = useState(null)
-  const [search, setSearch] = useState(false)
   const [tickerInfo, setTickerInfo] = useState({})
-  const [chartData, setChartData] = useState({})
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
+  const [chartData, setChartData] = useState(null)
 
   useEffect(() => {
     setDidMount(true);
@@ -28,6 +25,18 @@ const App = () => {
           )
         })
         setTickerInfo(newInfo)
+        return axios.get('/candle', { params: { ticker: tickerSymbol}})
+      })
+      .then((res) => {
+        console.log(res.data['Time Series (1min)'])
+        let data = [];
+        //timestamp, o, h, l, c
+        for (let key in res.data['Time Series (1min)']) {
+          let innerData = [];
+          innerData.push(Math.floor(new Date(key).getTime()), res.data['Time Series (1min)'][key]['1. open'], res.data['Time Series (1min)'][key]['2. high'], res.data['Time Series (1min)'][key]['3. low'], res.data['Time Series (1min)'][key]['4. close'])
+          data.push(innerData)
+        }
+        setChartData([{data}])
       })
       .catch((err) => {
         console.log(err)
@@ -62,6 +71,8 @@ const App = () => {
         />
         <div className="chart">
         <Candle
+          tickerSymbol={tickerSymbol}
+          chartData={chartData}
         />
         </div>
       </div>

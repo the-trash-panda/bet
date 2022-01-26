@@ -48,8 +48,9 @@ app.get('/reddit/ticker', (req, res) => {
   })
 })
 
-app.get('/graph', (req, res) => {
-  alpha.data.intraday(`msft`).then((data) => {
+app.get('/candle', (req, res) => {
+  const text = req.query.ticker
+  alpha.data.intraday(`${text}`).then((data) => {
     res.send(data)
   });
 })
