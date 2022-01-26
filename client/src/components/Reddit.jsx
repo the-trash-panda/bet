@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import RedditPost from './RedditPost.jsx';
 
-const Reddit = ({tickerInfo, tickerSymbol}) => {
-  if (Object.keys(tickerInfo).length === 0) {
+const Reddit = ({redditInfo, tickerSymbol}) => {
+  if (Object.keys(redditInfo).length === 0) {
     return (
       <div className="redditList">Search me</div>
-    )
-  } else {
+      )
+    } else {
+    const newInfo = redditInfo.filter((info) => {
+      return (
+        info.selftext.length > 0
+      )
+    })
     return (
       <div className="redditList">
-        {tickerInfo.map((info, idx) => {
+        {redditInfo.map((info, idx) => {
           return (
             <RedditPost
               key={idx}

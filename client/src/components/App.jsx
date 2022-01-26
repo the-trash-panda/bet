@@ -9,55 +9,50 @@ import config from '../../../config.js';
 const App = () => {
 
   const [didMount, setDidMount] = useState(false)
-  const [tickerSymbol, setTickerSymbol] = useState(null)
-  const [tickerInfo, setTickerInfo] = useState({})
+  const [isError, setIsError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [search, setSearch] = useState(false)
+
+  const [tickerSymbol, setTickerSymbol] = useState('SPY')
+  const [redditInfo, setRedditInfo] = useState({})
   const [chartData, setChartData] = useState(null)
   const [newsData, setNewsData] = useState(null)
 
-  useEffect(() => {
-    setDidMount(true);
-    return () => setDidMount(false);
-  }, [])
+  const fetchData = (tickerSymbol =  'SPY') => {
+    const getRedditData = axios.get('/reddit/wallstreetbets', { params: { ticker: tickerSymbol } })
+      .then((res) => {setRedditInfo(res.data)})
+    const getChartData = axios.get('/candle', { params: { ticker: tickerSymbol}})
+      .then((res) => {setChartData(res.data)})
+    const getNewsData = axios.get('/news', {params: { ticker: tickerSymbol }})
+      .then((res) => {console.log(res); setNewsData(res.data.articles)})
 
-  const fetchData = () => {
-    axios.get('/reddit/ticker', { params: { ticker: tickerSymbol } })
-      .then((res) => {
-        const newInfo = res.data.filter((info) => {
-          return (
-            info.selftext.length > 0
-          )
-        })
-        setTickerInfo(newInfo)
-        return axios.get('/candle', { params: { ticker: tickerSymbol}})
+    const promises = [getRedditData, getChartData, getNewsData];
+
+    Promise.all(promises)
+      .then(() => {setIsError(false)})
+      .then(() => {
+        setTimeout(() => {setIsLoading(false)}, 5000)
       })
-      .then((res) => {
-        let data = [];
-        for (let key in res.data['Time Series (1min)']) {
-          let innerData = [];
-          innerData.push(Math.floor(new Date(key).getTime()), res.data['Time Series (1min)'][key]['1. open'], res.data['Time Series (1min)'][key]['2. high'], res.data['Time Series (1min)'][key]['3. low'], res.data['Time Series (1min)'][key]['4. close'])
-          data.push(innerData)
-        }
-        setChartData([{data}])
-        let params = {
-          q: tickerSymbol,
-          from: '2022-01-01',
-          sortBy: 'relevancy',
-          apiKey: config.newsapi,
-          language: 'en'
-        }
-        return axios.get(`https://newsapi.org/v2/everything?q=${params.q}&from=${params.from}&sortBy=${params.sortBy}&language=${params.language}&apiKey=${params.apiKey}`)
-      })
-      .then((res) => {
-        setNewsData(res.data.articles)
-      })
+      .then(() => {setTickerSymbol(tickerSymbol)})
       .catch((err) => {
-        res.send(err)
+        setIsError(true)
+        console.log(err)
       })
   }
 
-  if (!didMount) {
-    return null;
-  }
+  useEffect(() => {
+    const url = new URL(document.URL)
+    const symbol = parseInt(url.search.split('=')[1], 10);
+    if (symbol) {
+      fetchData(symbol);
+    } else {
+      fetchData(tickerSymbol)
+    }
+  }, [search])
+
+  if (isError) { return <div className="loadingDiv"><span className="loading">Requests failed to load :(</span> </div>}
+  if (isLoading) { return <div className="loadingDiv"><span className="loading"><img className="loadingIMG" src="./images/loading.GIF" alt="Loading"/>Loading...</span></div> }
+
 
   return (
     <div className="app">
@@ -66,9 +61,10 @@ const App = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            fetchData()
+            setSearch(!search)
         }}>
-          <input className="searchBar"
+          <input
+            className="searchBar"
             placeholder="Search..."
             onChange={(e) => {
               const newTicker = e.target.value
@@ -82,7 +78,7 @@ const App = () => {
       <div className="topContainer">
         <Reddit
           tickerSymbol={tickerSymbol}
-          tickerInfo={tickerInfo}
+          redditInfo={redditInfo}
         />
         <div>
         <Candle
