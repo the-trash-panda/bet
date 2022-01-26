@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Reddit from './Reddit.jsx';
 import Candle from './Candle.jsx';
+import News from './News.jsx';
 import axios from 'axios';
 import 'regenerator-runtime/runtime';
+import config from '../../../config.js';
 
 const App = () => {
 
@@ -10,6 +12,7 @@ const App = () => {
   const [tickerSymbol, setTickerSymbol] = useState(null)
   const [tickerInfo, setTickerInfo] = useState({})
   const [chartData, setChartData] = useState(null)
+  const [newsData, setNewsData] = useState(null)
 
   useEffect(() => {
     setDidMount(true);
@@ -28,18 +31,26 @@ const App = () => {
         return axios.get('/candle', { params: { ticker: tickerSymbol}})
       })
       .then((res) => {
-        console.log(res.data['Time Series (1min)'])
         let data = [];
-        //timestamp, o, h, l, c
         for (let key in res.data['Time Series (1min)']) {
           let innerData = [];
           innerData.push(Math.floor(new Date(key).getTime()), res.data['Time Series (1min)'][key]['1. open'], res.data['Time Series (1min)'][key]['2. high'], res.data['Time Series (1min)'][key]['3. low'], res.data['Time Series (1min)'][key]['4. close'])
           data.push(innerData)
         }
         setChartData([{data}])
+        let params = {
+          q: tickerSymbol,
+          from: new Date(),
+          sortBy: 'popularity',
+          apiKey: config.newsapi
+        }
+        return axios.get(`https://newsapi.org/v2/everything?q=${params.q}&from=${params.from}&sortBy=${params.sortBy}&apiKey=${params.apiKey}`)
+      })
+      .then((res) => {
+        setNewsData(res.data.articles)
       })
       .catch((err) => {
-        console.log(err)
+        res.send(err)
       })
   }
 
@@ -48,33 +59,41 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h1>Bet</h1>
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        fetchData()
-      }}>
-        <input
-          placeholder="Search ticker symbol"
-          onChange={(e) => {
-            const newTicker = e.target.value
-            setTickerSymbol(newTicker)
-          }}
-        ></input>
-        <button
-        >Go!</button>
-      </form>
+    <div className="app">
+      <div className="topBar">
+        <h1 className="title">Bet.</h1>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            fetchData()
+        }}>
+          <input className="searchBar"
+            placeholder="Search..."
+            onChange={(e) => {
+              const newTicker = e.target.value
+              setTickerSymbol(newTicker.toUpperCase())
+            }}
+          ></input>
+          <button className="searchButton"
+          >Go!</button>
+        </form>
+      </div>
       <div className="topContainer">
         <Reddit
           tickerSymbol={tickerSymbol}
           tickerInfo={tickerInfo}
         />
-        <div className="chart">
+        <div>
         <Candle
           tickerSymbol={tickerSymbol}
           chartData={chartData}
         />
         </div>
+      </div>
+      <div className="bottomContainer">
+        <News
+          newsData={newsData}
+        />
       </div>
     </div>
   )

@@ -1,13 +1,7 @@
 'use strict';
-const corsOptions = {
-   origin:'*',
-   credentials: true,
-   optionSuccessStatus:200,
-}
 
 const config = require('../config.js');
 const express = require('express');
-const cors = require("cors");
 const snoowrap = require('snoowrap');
 const alpha = require('alphavantage')({ key: config.alphavantage });
 const app = express();
@@ -16,7 +10,6 @@ const port = 3000;
 
 const staticFilePath = path.join(__dirname, '..', '/client/dist')
 
-app.use(cors(corsOptions))
 app.use(express.static(staticFilePath));
 app.use(express.json());
 
@@ -54,6 +47,7 @@ app.get('/candle', (req, res) => {
     res.send(data)
   });
 })
+
 
 app.listen(port, () => {
   console.log(`app is listening at http://localhost:${port}`)
