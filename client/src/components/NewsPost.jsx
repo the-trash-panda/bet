@@ -8,6 +8,8 @@ const NewsPost = ({ data }) => {
       <a href={`${data.url}`} target="_blank">{data.title}</a>
       <p>
         {data.content.substring(0, 100)}
+        <br></br>
+        {data.publishedAt.substring(0, 10)}
       </p>
     </div>
   )

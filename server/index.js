@@ -31,7 +31,7 @@ app.get('/reddit/ticker', (req, res) => {
     query: text,
     time: 'month',
     subreddit: 'wallstreetbets',
-    sort: 'top'
+    sort: 'new'
   })
   .then((data) => {
     res.status(200).send(data)

@@ -40,11 +40,12 @@ const App = () => {
         setChartData([{data}])
         let params = {
           q: tickerSymbol,
-          from: new Date(),
-          sortBy: 'popularity',
-          apiKey: config.newsapi
+          from: '2022-01-01',
+          sortBy: 'relevancy',
+          apiKey: config.newsapi,
+          language: 'en'
         }
-        return axios.get(`https://newsapi.org/v2/everything?q=${params.q}&from=${params.from}&sortBy=${params.sortBy}&apiKey=${params.apiKey}`)
+        return axios.get(`https://newsapi.org/v2/everything?q=${params.q}&from=${params.from}&sortBy=${params.sortBy}&language=${params.language}&apiKey=${params.apiKey}`)
       })
       .then((res) => {
         setNewsData(res.data.articles)

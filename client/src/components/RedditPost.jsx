@@ -9,9 +9,13 @@ const RedditPost = ({info, tickerSymbol}) => {
   console.log(index)
   return (
     <div className="redditPost">
-      Time: {dateTimeString}
+      <span className="redditPostDate">{dateTimeString}</span>
       <br></br>
-      {info.author} said: {info.title}
+      <span className="redditPostAuthor">
+      {info.author} said:
+      </span>
+      <br></br>
+      &nbsp;&nbsp;&nbsp; {info.title}
       <br></br>
       Post: {index > -1 ?
                           <p>
@@ -22,7 +26,7 @@ const RedditPost = ({info, tickerSymbol}) => {
                               {tickerSymbol}
                             </span>
                             <span>
-                              {info.selftext.substring(index + tickerSymbol.toString().length, index + tickerSymbol.toString().length + 30)}
+                              {info.selftext.substring(index + tickerSymbol.toString().length, index + tickerSymbol.toString().length + 200)}
                             </span>
                           </p> : null}
     </div>
