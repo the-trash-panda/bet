@@ -4,7 +4,10 @@ const config = require('../config.js');
 const express = require('express');
 const snoowrap = require('snoowrap');
 const alpha = require('alphavantage')({ key: config.alphavantage });
-const axios = require('axios')
+const {StringStream} = require("scramjet");
+const request = require("request");
+const axios = require('axios');
+const db = require('../database/index.js');
 const app = express();
 const path = require('path');
 const port = 3000;
@@ -46,11 +49,29 @@ app.get('/reddit/wallstreetbets', (req, res) => {
 
 app.get('/candle', (req, res) => {
   const text = req.query.ticker
-  alpha.data.intraday(`${text}`, 'full', 'json', '60min').then((data) => {
-    res.send(data)
-  });
+  db.find({symbol: text}).exec((err, result) => {
+    if (err) {
+      console.log('Chart unavailable')
+    } else {
+      alpha.data.intraday(`${text}`, 'full', 'json', '60min').then((data) => {
+        res.send(data)
+      });
+    }
+  })
 })
 
+app.get('/ETFlist', (req, res) => {
+  const etf = {};
+  request.get(`https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=${config.alphavantage}`)
+    .pipe(new StringStream())
+    .CSVParse()                                   // parse CSV output into row objects
+    .consume((object) => {
+      console.log("Row:", object);
+      let newETF = new db({symbol: object[0], name: object[1], exchange: object[2], assetType: object[3], ipoDate: object[4], delistingDate: object[5], status: object[6]})
+      newETF.save();
+    })
+    .then(() => console.log("success"));
+})
 
 app.get('/news', (req, res) => {
   let params = {
@@ -68,6 +89,7 @@ app.get('/news', (req, res) => {
       res.status(404).send(err)
     })
 })
+
 
 app.listen(port, () => {
   console.log(`app is listening at http://localhost:${port}`)

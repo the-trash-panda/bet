@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Reddit from './Reddit.jsx';
 import Candle from './Candle.jsx';
 import News from './News.jsx';
+import WatchList from './WatchList.jsx';
 import axios from 'axios';
 import 'regenerator-runtime/runtime';
 import config from '../../../config.js';
@@ -17,6 +18,7 @@ const App = () => {
   const [redditInfo, setRedditInfo] = useState({})
   const [chartData, setChartData] = useState(null)
   const [newsData, setNewsData] = useState(null)
+  const [watchList, setWatchList] = useState(null)
 
   const fetchData = (tickerSymbol =  'SPY') => {
     const getRedditData = axios.get('/reddit/wallstreetbets', { params: { ticker: tickerSymbol } })
@@ -30,9 +32,7 @@ const App = () => {
 
     Promise.all(promises)
       .then(() => {setIsError(false)})
-      .then(() => {
-        setTimeout(() => {setIsLoading(false)}, 5000)
-      })
+      .then(() => { setTimeout(() => {setIsLoading(false)}, 5000)})
       .then(() => {setTickerSymbol(tickerSymbol)})
       .catch((err) => {
         setIsError(true)
@@ -51,6 +51,7 @@ const App = () => {
   }, [search])
 
   if (isError) { return <div className="loadingDiv"><span className="loading">Requests failed to load :(</span> </div>}
+  //can make '...' animated?
   if (isLoading) { return <div className="loadingDiv"><span className="loading"><img className="loadingIMG" src="./images/loading.GIF" alt="Loading"/>Loading...</span></div> }
 
 
@@ -73,24 +74,35 @@ const App = () => {
           ></input>
           <button className="searchButton"
           >Go!</button>
+          <button className="watchListButton"
+          >Add to WatchList</button>
         </form>
       </div>
-      <div className="topContainer">
-        <Reddit
-          tickerSymbol={tickerSymbol}
-          redditInfo={redditInfo}
-        />
-        <div>
-        <Candle
-          tickerSymbol={tickerSymbol}
-          chartData={chartData}
-        />
+      <div className="container">
+        <div className="leftContainer">
+          <WatchList
+            watchList={watchList}
+          />
         </div>
-      </div>
-      <div className="bottomContainer">
-        <News
-          newsData={newsData}
-        />
+        <div className="rightContainer">
+          <div className="topContainer">
+            <Reddit
+              tickerSymbol={tickerSymbol}
+              redditInfo={redditInfo}
+            />
+            <div>
+            <Candle
+              tickerSymbol={tickerSymbol}
+              chartData={chartData}
+            />
+            </div>
+          </div>
+          <div className="bottomContainer">
+            {/* <News
+              newsData={newsData}
+            /> */}
+          </div>
+        </div>
       </div>
     </div>
   )

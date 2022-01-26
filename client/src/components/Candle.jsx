@@ -24,8 +24,8 @@ const Candle = ({ tickerSymbol, chartData }) => {
 
   if (chartData === null) {
     return (
-      <div>
-        Nothing to show yet!
+      <div className="noChart">
+        No Chart ):
       </div>
     )
   } else {
