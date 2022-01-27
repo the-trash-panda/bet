@@ -89,7 +89,9 @@ const App = () => {
             {/* <IPOandEarnings/> */}
             <WatchList
               watchList={watchList}
+              search={search}
               setTickerSymbol={setTickerSymbol}
+              setSearch={setSearch}
             />
           </div>
           <div className="rightContainer">

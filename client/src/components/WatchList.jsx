@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import WatchPost from './WatchPost.jsx';
 
-const WatchList = ({ watchList, setTickerSymbol }) => {
+const WatchList = ({ watchList, setTickerSymbol, search, setSearch }) => {
   return (
     <div className="watchList">
         My WatchList:
@@ -19,6 +19,8 @@ const WatchList = ({ watchList, setTickerSymbol }) => {
                 key={idx}
                 watch={watch}
                 setTickerSymbol={setTickerSymbol}
+                search={search}
+                setSearch={setSearch}
               />
             )
           })}
