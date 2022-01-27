@@ -3,6 +3,7 @@ import Reddit from './Reddit.jsx';
 import Candle from './Candle.jsx';
 import News from './News.jsx';
 import WatchList from './WatchList.jsx';
+import Form from './Form.jsx';
 import axios from 'axios';
 import 'regenerator-runtime/runtime';
 import config from '../../../config.js';
@@ -21,6 +22,8 @@ const App = () => {
   const [watchList, setWatchList] = useState(null)
 
   const fetchData = (tickerSymbol =  'SPY') => {
+    const getWatchList = axios.get('/watchList')
+      .then((res) => {console.log(res); setWatchList(res.data)})
     const getRedditData = axios.get('/reddit/wallstreetbets', { params: { ticker: tickerSymbol } })
       .then((res) => {setRedditInfo(res.data)})
     const getChartData = axios.get('/candle', { params: { ticker: tickerSymbol}})
@@ -28,12 +31,12 @@ const App = () => {
     const getNewsData = axios.get('/news', {params: { ticker: tickerSymbol }})
       .then((res) => {setNewsData(res.data.articles)})
 
-    const promises = [getRedditData, getChartData, getNewsData];
+    const promises = [getWatchList, getRedditData, getChartData, getNewsData];
 
     Promise.all(promises)
-      .then(() => {setIsError(false)})
-      .then(() => { setTimeout(() => {setIsLoading(false)}, 5000)})
-      .then(() => {setTickerSymbol(tickerSymbol)})
+      .then(() => { setIsError(false)} )
+      .then(() => { setTimeout(() => {setIsLoading(false)}, 5000)} )
+      .then(() => { setTickerSymbol(tickerSymbol)} )
       .catch((err) => {
         setIsError(true)
         console.log(err)
@@ -51,7 +54,6 @@ const App = () => {
   }, [search])
 
   if (isError) { return <div className="loadingDiv"><span className="loading">Requests failed to load :(</span> </div>}
-  //can make '...' animated?
   if (isLoading) { return <div className="loadingDiv"><span className="loading"><img className="loadingIMG" src="./images/loading.GIF" alt="Loading"/>Loading...</span></div> }
 
 
@@ -59,24 +61,14 @@ const App = () => {
     <div className="app">
       <div className="topBar">
         <h1 className="title">Bet.</h1>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSearch(!search)
-        }}>
-          <input
-            className="searchBar"
-            placeholder="Search..."
-            onChange={(e) => {
-              const newTicker = e.target.value
-              setTickerSymbol(newTicker.toUpperCase())
-            }}
-          ></input>
-          <button className="searchButton"
-          >Go!</button>
-          <button className="watchListButton"
-          >Add to WatchList</button>
-        </form>
+        <Form
+          search={search}
+          tickerSymbol={tickerSymbol}
+          watchList={watchList}
+          setSearch={setSearch}
+          setTickerSymbol={setTickerSymbol}
+          setWatchList={setWatchList}
+        />
       </div>
       <div className="container">
         <div className="leftContainer">
@@ -98,9 +90,9 @@ const App = () => {
             </div>
           </div>
           <div className="bottomContainer">
-            {/* <News
+            <News
               newsData={newsData}
-            /> */}
+            />
           </div>
         </div>
       </div>

@@ -18,6 +18,12 @@ const etfSchema = new mongoose.Schema({
   status: String
 })
 
-const etfList = mongoose.model('etfList', etfSchema);
+const watchListSchema = new mongoose.Schema({
+  symbol: String,
+  name: String
+})
 
-module.exports = etfList;
+module.exports = {
+  etfList: mongoose.model('etfList', etfSchema),
+  watchList: mongoose.model('watchList', watchListSchema)
+}

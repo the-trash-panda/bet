@@ -29,7 +29,24 @@ const reddit = new snoowrap({
   password: config.password
 });
 
+app.get('/watchList', (req, res) => {
+  db.watchList.find({})
+    .exec((err, results) => {
+      if (err) {
+        res.status(500).send(err)
+      } else {
+        console.log(results)
+        res.status(200).send(results)
+      }
+    })
+})
 
+app.post('/watchList', (req, res) => {
+  const text = req.body.symbol
+  let newETF = new db.watchList (req.body)
+  newETF.save()
+  res.send(newETF)
+})
 
 app.get('/reddit/wallstreetbets', (req, res) => {
   const text = req.query.ticker
@@ -49,7 +66,7 @@ app.get('/reddit/wallstreetbets', (req, res) => {
 
 app.get('/candle', (req, res) => {
   const text = req.query.ticker
-  db.find({symbol: text}).exec((err, result) => {
+  db.etfList.find({symbol: text}).exec((err, result) => {
     if (err) {
       console.log('Chart unavailable')
     } else {
@@ -67,7 +84,7 @@ app.get('/ETFlist', (req, res) => {
     .CSVParse()                                   // parse CSV output into row objects
     .consume((object) => {
       console.log("Row:", object);
-      let newETF = new db({symbol: object[0], name: object[1], exchange: object[2], assetType: object[3], ipoDate: object[4], delistingDate: object[5], status: object[6]})
+      let newETF = new db.etfList({symbol: object[0], name: object[1], exchange: object[2], assetType: object[3], ipoDate: object[4], delistingDate: object[5], status: object[6]})
       newETF.save();
     })
     .then(() => console.log("success"));
