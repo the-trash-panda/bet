@@ -39,19 +39,51 @@ app.get('/watchList', (req, res) => {
 
 app.post('/watchList', (req, res) => {
   const etf = req.body.symbol
-  db.etfList.find({symbol: etf}, {name: 1})
+  db.watchList.find({symbol: etf}, {name: 1})
     .exec((err, results) => {
       if (err) {
         res.status(500).send(err)
       } else {
-        const name = results[0].name
-        let newWatch = {
-          symbol: etf,
-          name: name
+        if (results.length > 0) {
+          db.watchList.deleteOne({symbol: etf})
+          .exec((err, results) => {
+            if (err) {
+              res.status(500).send(err)
+            } else {
+              console.log(`${etf} successfully removed from watch list!`)
+              res.send(`${etf} successfully removed from watch list!`)
+            }
+          })
+        } else {
+          db.etfList.find({symbol: etf}, {name: 1})
+            .exec((err, results) => {
+              if (err) {
+                res.status(500).send(err)
+              } else {
+                const name = results[0].name
+                let newWatch = {
+                  symbol: etf,
+                  name: name
+                }
+                let newETF = new db.watchList (newWatch)
+                newETF.save()
+                res.send(`${etf} successfully added to the watch list!`)
+                console.log(`${etf} successfully added to the watch list!`)
+              }
+            })
         }
-        let newETF = new db.watchList (newWatch)
-        newETF.save()
-        res.send(newETF)
+      }
+    })
+})
+
+app.put('/watchList', (req, res) => {
+  const etf = req.body.symbol
+  db.watchList.deleteOne({symbol: etf})
+    .exec((err, results) => {
+      if (err) {
+        res.status(500).send(err)
+      } else {
+        console.log(`${etf} successfully removed from watch list!`)
       }
     })
 })

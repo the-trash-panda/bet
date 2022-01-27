@@ -80,7 +80,7 @@ h1 {
 
 .watchListButton {
   padding: 0.5vw 1vw;
-  width: 10vw;
+  width: auto;
   margin-left: 1vw;
   font-size: 2vh;
 }

@@ -3,20 +3,47 @@ import axios from 'axios';
 
 const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, setWatchList, setHomePage}) => {
 
+  const [button, setButton] = useState('Add to Watch List')
+
+  useEffect(() => {
+    if (watchList !== null) {
+      watchList.map((watch) => {
+        if (watch.symbol === tickerSymbol) {
+          setButton('Remove from Watch List')
+        }
+      })
+    }
+  }, [])
+
+
   const addToList = (etf) => {
     let params = {
       symbol: etf,
     }
+
     axios.post('/watchList', params)
-      .then((response) => {
+      .then((res) => {
         return axios.get('/watchList')
       })
-      .then((response) => {
-        setWatchList(response.data)
+      .then((res) => {
+        if (!Array.isArray(res.data)) {
+          setWatchList([res.data])
+        } else {
+          setWatchList(res.data)
+        }
       })
       .catch((err) => {
         console.log(err)
       })
+  }
+
+  const buttonText = (e) => {
+    e.preventDefault();
+    if (button === 'Remove from Watch List') {
+      setButton('Add to Watch List')
+    } else if (button === 'Add to Watch List') {
+      setButton('Remove from Watch List')
+    }
   }
 
   return (
@@ -40,17 +67,17 @@ const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, set
         <button
           className="watchListButton"
           onClick={(e) => {
-            e.preventDefault();
+            buttonText(e)
             addToList(tickerSymbol)
-            console.log('bye', tickerSymbol)
           }}
-        >Add to WatchList</button>
+        >{button}</button>
         <button
           className="newsButton"
-          onClick={(e) => {e.preventDefault(); setHomePage('news');}}
-        >
-          Latest News
-        </button>
+          onClick={(e) => {
+            e.preventDefault();
+            setHomePage('news');
+          }}
+        >Latest News</button>
       </form>
     </div>
   )
