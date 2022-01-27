@@ -14,10 +14,7 @@ const RedditPost = ({info, tickerSymbol}) => {
       <span className="redditPostAuthor">
       {info.author} said:
       </span>
-      <br></br>
-
         &nbsp;&nbsp;&nbsp;
-
       {index > -1 ?
       <h6>
         <span className="redditPostTitle">
@@ -30,7 +27,6 @@ const RedditPost = ({info, tickerSymbol}) => {
           {info.title.substring(index + tickerSymbol.length)}
         </span>
       </h6> : <h6><span className="redditPostTitle">{info.title}</span></h6>}
-      <br></br>
       {index2 > -1 ?
         <p>
           <a href={`${info.url}`}></a>

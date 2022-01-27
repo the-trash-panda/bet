@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Calendar from 'react-calendar';
 import Reddit from './Reddit.jsx';
 import Candle from './Candle.jsx';
 import News from './News.jsx';
@@ -20,6 +21,7 @@ const App = () => {
   const [chartData, setChartData] = useState(null)
   const [newsData, setNewsData] = useState(null)
   const [watchList, setWatchList] = useState(null)
+  const [value, onChange] = useState(new Date());
 
   const fetchData = (tickerSymbol =  'SPY') => {
     const getWatchList = axios.get('/watchList')
@@ -35,7 +37,7 @@ const App = () => {
 
     Promise.all(promises)
       .then(() => { setIsError(false)} )
-      .then(() => { setTimeout(() => {setIsLoading(false)}, 5000)} )
+      .then(() => { setTimeout(() => {setIsLoading(false)}, 2500)} )
       .then(() => { setTickerSymbol(tickerSymbol)} )
       .catch((err) => {
         setIsError(true)
@@ -72,6 +74,10 @@ const App = () => {
       </div>
       <div className="container">
         <div className="leftContainer">
+          <Calendar
+            onChange={onChange}
+            value={value}
+          />
           <WatchList
             watchList={watchList}
           />

@@ -7,7 +7,6 @@ const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, set
     console.log('addToList:', etf)
     let params = {
       symbol: etf,
-      name: 'idk'
     }
     axios.post('/watchList', params)
       .then((response) => {
@@ -17,7 +16,7 @@ const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, set
       })
       .then((response) => {
         console.log('axios.get watchlist response:', response)
-        setWatchList(response)
+        setWatchList(response.data)
       })
       .catch((err) => {
         console.log(err)

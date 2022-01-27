@@ -19,8 +19,6 @@ const newsAPI = `https://newsapi.org/v2/everything`
 app.use(express.static(staticFilePath));
 app.use(express.json());
 
-
-
 const reddit = new snoowrap({
   userAgent: config.userAgent,
   clientId: config.clientId,
@@ -42,17 +40,32 @@ app.get('/watchList', (req, res) => {
 })
 
 app.post('/watchList', (req, res) => {
-  const text = req.body.symbol
-  let newETF = new db.watchList (req.body)
-  newETF.save()
-  res.send(newETF)
+  console.log('req.body:', req.body)
+  const etf = req.body.symbol
+  db.etfList.find({symbol: etf}, {name: 1})
+    .exec((err, results) => {
+      if (err) {
+        res.status(500).send(err)
+      } else {
+        console.log('post results:', results)
+        const name = results[0].name
+        let newWatch = {
+          symbol: etf,
+          name: name
+        }
+        console.log('post newWatch:', newWatch)
+        let newETF = new db.watchList (newWatch)
+        newETF.save()
+        res.send(newETF)
+      }
+    })
 })
 
 app.get('/reddit/wallstreetbets', (req, res) => {
   const text = req.query.ticker
   reddit.search({
     query: text,
-    time: 'month',
+    time: 'year',
     subreddit: 'wallstreetbets',
     sort: 'new'
   })
@@ -81,7 +94,7 @@ app.get('/ETFlist', (req, res) => {
   const etf = {};
   request.get(`https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=${config.alphavantage}`)
     .pipe(new StringStream())
-    .CSVParse()                                   // parse CSV output into row objects
+    .CSVParse()
     .consume((object) => {
       console.log("Row:", object);
       let newETF = new db.etfList({symbol: object[0], name: object[1], exchange: object[2], assetType: object[3], ipoDate: object[4], delistingDate: object[5], status: object[6]})
