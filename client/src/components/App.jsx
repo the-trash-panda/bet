@@ -27,13 +27,13 @@ const App = () => {
 
   const fetchData = (tickerSymbol =  'SPY') => {
     const getWatchList = axios.get('/watchList')
-      .then((res) => {console.log(res); setWatchList(res.data)})
+      .then((res) => { setWatchList(res.data) })
     const getRedditData = axios.get('/reddit/wallstreetbets', { params: { ticker: tickerSymbol } })
-      .then((res) => {setRedditInfo(res.data)})
-    const getChartData = axios.get('/candle', { params: { ticker: tickerSymbol}})
-      .then((res) => {setChartData(res.data)})
-    const getNewsData = axios.get('/news', {params: { ticker: tickerSymbol }})
-      .then((res) => {setNewsData(res.data.articles)})
+      .then((res) => { setRedditInfo(res.data) })
+    const getChartData = axios.get('/candle', { params: { ticker: tickerSymbol } })
+      .then((res) => { setChartData(res.data) })
+    const getNewsData = axios.get('/stockNews', { params: { ticker: tickerSymbol } })
+      .then((res) => { console.log(res.data); setNewsData(res.data) })
 
     const promises = [getWatchList, getRedditData, getChartData, getNewsData];
 
@@ -104,7 +104,7 @@ const App = () => {
           </div>
         </div>
         :
-        <div className="bottomContainer">
+        <div className="newsContainer">
           <News
             newsData={newsData}
           />

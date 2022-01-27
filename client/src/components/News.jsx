@@ -10,10 +10,10 @@ const News = ({ newsData }) => {
       </div>
     )
   } else {
-    const newData = newsData.splice(0, 5)
+    console.log('news:', newsData)
     return (
       <div className="newsList">
-        {newData.map((data, idx) => {
+        {newsData.data.map((data, idx) => {
           return (
             <NewsPost
               key={idx}

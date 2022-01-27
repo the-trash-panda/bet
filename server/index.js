@@ -1,12 +1,12 @@
 'use strict';
 
 const config = require('../config.js');
-const express = require('express');
 const snoowrap = require('snoowrap');
+const { StringStream } = require("scramjet");
 const alpha = require('alphavantage')({ key: config.alphavantage });
-const {StringStream} = require("scramjet");
-const request = require("request");
 const axios = require('axios');
+const express = require('express');
+const request = require('request');
 const db = require('../database/index.js');
 const app = express();
 const path = require('path');
@@ -14,7 +14,6 @@ const port = 3000;
 
 const staticFilePath = path.join(__dirname, '..', '/client/dist')
 
-const newsAPI = `https://newsapi.org/v2/everything`
 
 app.use(express.static(staticFilePath));
 app.use(express.json());
@@ -33,27 +32,23 @@ app.get('/watchList', (req, res) => {
       if (err) {
         res.status(500).send(err)
       } else {
-        console.log(results)
         res.status(200).send(results)
       }
     })
 })
 
 app.post('/watchList', (req, res) => {
-  console.log('req.body:', req.body)
   const etf = req.body.symbol
   db.etfList.find({symbol: etf}, {name: 1})
     .exec((err, results) => {
       if (err) {
         res.status(500).send(err)
       } else {
-        console.log('post results:', results)
         const name = results[0].name
         let newWatch = {
           symbol: etf,
           name: name
         }
-        console.log('post newWatch:', newWatch)
         let newETF = new db.watchList (newWatch)
         newETF.save()
         res.send(newETF)
@@ -100,7 +95,25 @@ app.get('/ETFlist', (req, res) => {
       let newETF = new db.etfList({symbol: object[0], name: object[1], exchange: object[2], assetType: object[3], ipoDate: object[4], delistingDate: object[5], status: object[6]})
       newETF.save();
     })
-    .then(() => console.log("success"));
+    .then(() => {console.log("success"); res.end()});
+})
+
+app.get('/earningsList', (req, res) => {
+  const etf = {};
+  request.get(`https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=${config.alphavantage}`)
+    .pipe(new StringStream())
+    .CSVParse()
+    .consume((object) => {
+      console.log("Row:", object);
+      let newEarnings = new db.earningsList({symbol: object[0], name: object[1], reportDate: object[2], fiscalDateEnding: object[3], estimate: object[4], currency: object[5]})
+      newEarnings.save();
+    })
+    .then(() => {console.log("success"); res.end()});
+})
+
+
+app.get('/earningsDate', (req, res) => {
+  db.earningsList.find({})
 })
 
 app.get('/news', (req, res) => {
@@ -112,6 +125,23 @@ app.get('/news', (req, res) => {
     language: 'en'
   }
   axios.get(`https://newsapi.org/v2/everything?q=${params.q}&from=${params.from}&sortBy=${params.sortBy}&language=${params.language}&apiKey=${params.apiKey}`)
+    .then((data) => {
+      res.status(200).send(data.data)
+    })
+    .catch((err) => {
+      res.status(404).send(err)
+    })
+})
+
+app.get('/stockNews', (req, res) => {
+  let params = {
+    symbols: req.query.ticker,
+    filter_entities: true,
+    language: 'en',
+    published_after: '2022-01',
+    api_token: config.stockdata
+  }
+  axios.get(`https://api.stockdata.org/v1/news/all?symbols=${params.symbols}&filter_entities=${params.filter_entities}&language=${params.language}&published_after=${params.published_after}&api_token=${params.api_token}`)
     .then((data) => {
       res.status(200).send(data.data)
     })

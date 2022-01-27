@@ -23,7 +23,17 @@ const watchListSchema = new mongoose.Schema({
   name: String
 })
 
+const earningsSchema = new mongoose.Schema({
+  symbol: String,
+  name: String,
+  reportDate: String,
+  fiscalDateEnding: String,
+  estimate: String,
+  currency: String
+})
+
 module.exports = {
   etfList: mongoose.model('etfList', etfSchema),
-  watchList: mongoose.model('watchList', watchListSchema)
+  watchList: mongoose.model('watchList', watchListSchema),
+  earningsList: mongoose.model('earningsList', earningsSchema)
 }
