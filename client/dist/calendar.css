@@ -40,6 +40,7 @@
 .react-calendar__navigation {
   height: 44px;
   margin-bottom: 10px;
+  text-align: center;
 }
 .react-calendar__navigation button {
   min-width: 44px;
