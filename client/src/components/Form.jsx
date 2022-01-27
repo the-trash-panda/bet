@@ -10,10 +10,12 @@ const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, set
       watchList.map((watch) => {
         if (watch.symbol === tickerSymbol) {
           setButton('Remove from Watch List')
+        } else {
+          setButton('Add to Watch List')
         }
       })
     }
-  }, [watchList])
+  }, [watchList, search])
 
 
   const addToList = (etf) => {
