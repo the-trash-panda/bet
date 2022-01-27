@@ -16,6 +16,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState(false)
 
+  const [homePage, setHomePage] = useState('home')
+
   const [tickerSymbol, setTickerSymbol] = useState('SPY')
   const [redditInfo, setRedditInfo] = useState({})
   const [chartData, setChartData] = useState(null)
@@ -60,9 +62,12 @@ const App = () => {
 
 
   return (
-    <div className="app">
+    <div className="main">
       <div className="topBar">
-        <h1 className="title">Bet.</h1>
+        <h1
+          className="title"
+          onClick={(e) => {setHomePage('home')}}
+        >Bet.</h1>
         <Form
           search={search}
           tickerSymbol={tickerSymbol}
@@ -70,38 +75,41 @@ const App = () => {
           setSearch={setSearch}
           setTickerSymbol={setTickerSymbol}
           setWatchList={setWatchList}
+          setHomePage={setHomePage}
         />
       </div>
-      <div className="container">
-        <div className="leftContainer">
-          <Calendar
-            onChange={onChange}
-            value={value}
-          />
-          <WatchList
-            watchList={watchList}
-          />
-        </div>
-        <div className="rightContainer">
-          <div className="topContainer">
-            <Reddit
-              tickerSymbol={tickerSymbol}
-              redditInfo={redditInfo}
+      {homePage === 'home' ?
+        <div className="container">
+          <div className="leftContainer">
+            <Calendar
+              onChange={onChange}
+              value={value}
             />
-            <div>
-            <Candle
-              tickerSymbol={tickerSymbol}
-              chartData={chartData}
+            <WatchList
+              watchList={watchList}
+              setTickerSymbol={setTickerSymbol}
             />
+          </div>
+          <div className="rightContainer">
+            <div className="topContainer">
+              <Reddit
+                tickerSymbol={tickerSymbol}
+                redditInfo={redditInfo}
+              />
+              <Candle
+                tickerSymbol={tickerSymbol}
+                chartData={chartData}
+              />
             </div>
           </div>
-          <div className="bottomContainer">
-            <News
-              newsData={newsData}
-            />
-          </div>
         </div>
-      </div>
+        :
+        <div className="bottomContainer">
+          <News
+            newsData={newsData}
+          />
+        </div>
+      }
     </div>
   )
 }

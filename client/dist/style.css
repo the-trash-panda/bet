@@ -1,5 +1,5 @@
 
-.app {
+.main {
   background-color: beige;
   display: flex;
   flex-direction: column;
@@ -7,6 +7,10 @@
   height: 100vh;
   font-family: 'Alata', sans-serif;
   margin-bottom: 0;
+}
+
+h1 {
+  cursor: pointer;
 }
 
 .loadingDiv {
@@ -78,8 +82,19 @@
   padding: 0.5vw 1vw;
   width: 10vw;
   margin-left: 1vw;
+  font-size: 2vh;
+}
+
+.newsButton {
+  padding: 0.5vw 1vw;
+  width: 10vw;
+  margin-left: 1vw;
   margin-right: 5vw;
   font-size: 2vh;
+}
+
+button {
+  cursor: pointer;
 }
 
 /*****************************/
@@ -217,12 +232,12 @@ h6 {
 
 thead,
 tfoot {
-    background-color: #3f87a6;
+    background-color: #c2c2c2;
     color: #fff;
 }
 
 tbody {
-    background-color: #e4f0f5;
+    background-color: #f0f0eb;
 }
 
 caption {
@@ -250,4 +265,5 @@ td {
 
 tr {
   font-size: 1.5vh;
+  cursor: pointer;
 }

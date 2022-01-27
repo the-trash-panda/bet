@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, setWatchList}) => {
+const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, setWatchList, setHomePage}) => {
 
   const addToList = (etf) => {
-    console.log('addToList:', etf)
     let params = {
       symbol: etf,
     }
     axios.post('/watchList', params)
       .then((response) => {
-        console.log('hi')
-        console.log('axios.post watchlist response:', response)
         return axios.get('/watchList')
       })
       .then((response) => {
-        console.log('axios.get watchlist response:', response)
         setWatchList(response.data)
       })
       .catch((err) => {
@@ -49,6 +45,12 @@ const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, set
             console.log('bye', tickerSymbol)
           }}
         >Add to WatchList</button>
+        <button
+          className="newsButton"
+          onClick={(e) => {e.preventDefault(); setHomePage('news');}}
+        >
+          Latest News
+        </button>
       </form>
     </div>
   )
