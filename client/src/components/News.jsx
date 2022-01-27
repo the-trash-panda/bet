@@ -13,7 +13,7 @@ const News = ({ newsData }) => {
     console.log('news:', newsData)
     return (
       <div className="newsList">
-        {newsData.data.map((data, idx) => {
+        {newsData.articles.map((data, idx) => {
           return (
             <NewsPost
               key={idx}

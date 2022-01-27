@@ -116,6 +116,7 @@ button {
   width: 80vw;
   margin-right: 5vw;
   margin-top: 10vh;
+  align-items: baseline;
 }
 
 /*****************************/
@@ -138,13 +139,30 @@ h6 {
 
 .redditList {
   width: 25vw;
-  height: 70vh;
+  height: 50vh;
   margin-left: 3vw;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden !important;
+  background-color: color;
 }
+
+img {
+  width: 90%;
+  position: sticky;
+  top: 0;
+  background-color: beige;
+  z-index: 2;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wallStreetBets {
+  object-fit: cover;
+}
+
 
 .redditPost {
   padding-top: 0.5vh;
@@ -178,8 +196,9 @@ h6 {
 }
 
 .chart {
+  margin-top: 5vh;
   width: 45vw;
-  max-height: 70vh;
+  max-height: 80vh;
   margin-left: 2.5vw;
 }
 

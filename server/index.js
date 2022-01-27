@@ -1,10 +1,11 @@
-'use strict';
+// 'use strict';
 
 const config = require('../config.js');
 const snoowrap = require('snoowrap');
 const { StringStream } = require("scramjet");
 const alpha = require('alphavantage')({ key: config.alphavantage });
 const axios = require('axios');
+const moment = require('moment');
 const express = require('express');
 const request = require('request');
 const db = require('../database/index.js');
@@ -137,11 +138,21 @@ app.get('/earningsList', (req, res) => {
     .CSVParse()
     .consume((object) => {
       console.log("Row:", object);
-      let newEarnings = new db.earningsList({symbol: object[0], name: object[1], reportDate: object[2], fiscalDateEnding: object[3], estimate: object[4], currency: object[5]})
-      newEarnings.save();
+      const newDate = moment(object[2], 'YYY-MM-DD')
+      console.log(newDate.isValid())
+      if (newDate.isValid()) {
+        let newEarnings = new db.earningsList({symbol: object[0], name: object[1], reportDate: newDate, fiscalDateEnding: object[3], estimate: object[4], currency: object[5]})
+        newEarnings.save();
+      } else {
+        let newEarnings = new db.earningsList({symbol: object[0], name: object[1], reportDate: 2022-05-27, fiscalDateEnding: object[3], estimate: object[4], currency: object[5]})
+      }
     })
     .then(() => {console.log("success"); res.end()});
 })
+
+// app.get('/earnings', (req, res) => {
+
+// })
 
 
 app.get('/earningsDate', (req, res) => {

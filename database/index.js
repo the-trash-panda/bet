@@ -26,7 +26,7 @@ const watchListSchema = new mongoose.Schema({
 const earningsSchema = new mongoose.Schema({
   symbol: String,
   name: String,
-  reportDate: String,
+  reportDate: Date,
   fiscalDateEnding: String,
   estimate: String,
   currency: String

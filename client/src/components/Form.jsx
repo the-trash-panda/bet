@@ -13,7 +13,7 @@ const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, set
         }
       })
     }
-  }, [])
+  }, [watchList])
 
 
   const addToList = (etf) => {

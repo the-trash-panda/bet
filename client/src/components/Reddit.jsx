@@ -13,16 +13,19 @@ const Reddit = ({redditInfo, tickerSymbol}) => {
       )
     })
     return (
-      <div className="redditList">
-        {redditInfo.map((info, idx) => {
-          return (
-            <RedditPost
-              key={idx}
-              info={info}
-              tickerSymbol={tickerSymbol}
-            />
-          )
-        })}
+      <div>
+        <img className="wallStreetBets" src="./images/WallStreetBets.png"/>
+        <div className="redditList">
+          {redditInfo.map((info, idx) => {
+            return (
+              <RedditPost
+                key={idx}
+                info={info}
+                tickerSymbol={tickerSymbol}
+              />
+            )
+          })}
+        </div>
       </div>
     )
   }

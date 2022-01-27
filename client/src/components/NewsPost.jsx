@@ -6,9 +6,9 @@ const NewsPost = ({ data }) => {
     <div className="newsPost">
       <a href={`${data.url}`} target="_blank">{data.title}</a>
       <p>
-        {data.snippet}
+        {data.content}
         <br></br>
-        {data.published_at.substring(0, 10)}
+        {data.publishedAt.substring(0, 10)}
       </p>
     </div>
   )
