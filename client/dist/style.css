@@ -87,7 +87,7 @@ h1 {
 
 .newsButton {
   padding: 0.5vw 1vw;
-  width: 10vw;
+  width: auto;
   margin-left: 1vw;
   margin-right: 5vw;
   font-size: 2vh;
@@ -212,21 +212,34 @@ img {
 /*****************************/
 
 .newsContainer {
-  flex: 1 1 auto;
+  /* flex: 1 1 auto; */
   overflow-y: auto;
   min-height: 100px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 
 .newsList {
-  display: flex;
-  flex-direction: column;
+  margin-top: 5vh;
 }
 
 .newsPost {
   width: 50vw;
   margin-left: 2vw;
   margin-right: 2vw;
+  margin-bottom: 2vh;
+}
+
+.newsPhoto {
+  width: 50vw;
+  height: auto;
+  object-fit: fill;
+}
+
+br {
+  margin-bottom: 2vh;
 }
 
 a {

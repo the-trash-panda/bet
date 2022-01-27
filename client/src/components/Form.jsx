@@ -77,7 +77,7 @@ const Form = ({ search, tickerSymbol, setSearch, setTickerSymbol, watchList, set
             e.preventDefault();
             setHomePage('news');
           }}
-        >Latest News</button>
+        >DD</button>
       </form>
     </div>
   )

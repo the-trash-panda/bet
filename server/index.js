@@ -150,9 +150,6 @@ app.get('/earningsList', (req, res) => {
     .then(() => {console.log("success"); res.end()});
 })
 
-// app.get('/earnings', (req, res) => {
-
-// })
 
 
 app.get('/earningsDate', (req, res) => {
