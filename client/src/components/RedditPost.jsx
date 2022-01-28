@@ -17,19 +17,25 @@ const RedditPost = ({info, tickerSymbol}) => {
         &nbsp;&nbsp;&nbsp;
       {index > -1 ?
       <h6>
-        <span className="redditPostTitle">
-          {info.title.substring(0, index)}
-        </span>
-        <span className="tickerSymbolTitle">
-          {tickerSymbol}
-        </span>
-        <span className="redditPostTitle">
-          {info.title.substring(index + tickerSymbol.length)}
-        </span>
-      </h6> : <h6><span className="redditPostTitle">{info.title}</span></h6>}
+        <a href={`${info.url}`} target="_blank">
+          <span className="redditPostTitle">
+            {info.title.substring(0, index)}
+          </span>
+          <span className="tickerSymbolTitle">
+            {tickerSymbol}
+          </span>
+          <span className="redditPostTitle">
+            {info.title.substring(index + tickerSymbol.length)}
+          </span>
+        </a>
+      </h6> :
+      <h6>
+        <a href={`${info.url}`} target="_blank">
+          <span className="redditPostTitle">{info.title}</span>
+        </a>
+      </h6>}
       {index2 > -1 ?
         <p>
-          <a href={`${info.url}`}></a>
           <span className="redditPostText">
             ...{index2 < 50 ? info.selftext.substring(0, index2) : info.selftext.substring(index2 - 100, index2)}
           </span>
