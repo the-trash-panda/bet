@@ -19,3 +19,11 @@ Scroll through the latest topics people are talking about on Reddit's WallStreet
 Read the latest news on the stock you searched!
 
 <img src="https://drive.google.com/uc?export=view&id=15k_llbrQLDVY41FBuwbMiKjWfFFMZ0ke" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
+
+
+## Getting Started <a name="setup"></a>
+1. Get API keys needed from configExample.js.
+2. Copy `configExample.js`, rename it to `config.js`, and enter your Github token.
+3. Run `npm install` to install dependencies.
+4. Run `npm run start` to start Node.
+5. Run `npm run react-dev` to start Webpack.
